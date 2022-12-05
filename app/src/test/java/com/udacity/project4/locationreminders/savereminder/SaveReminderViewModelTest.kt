@@ -1,9 +1,8 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.app.Application
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.udacity.project4.R
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.FakeDataSource
@@ -28,8 +27,6 @@ import kotlin.coroutines.ContinuationInterceptor
 class SaveReminderViewModelTest {
     //TODO: provide testing to the SaveReminderView and its live data objects
 
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()

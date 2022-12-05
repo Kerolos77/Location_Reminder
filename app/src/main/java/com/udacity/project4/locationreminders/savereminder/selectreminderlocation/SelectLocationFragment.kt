@@ -90,6 +90,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun onLocationSelected() {
+        _viewModel.latitude.value = mark?.position?.latitude
+        _viewModel.longitude.value = mark?.position?.longitude
+        _viewModel.reminderSelectedLocationStr.value = mark?.title
         _viewModel.navigationCommand.postValue(NavigationCommand.Back)
     }
 
@@ -141,11 +144,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 requireContext()
             )
         ) {
-            locationUtils.lastLocation {
+            locationUtils.lastLocation ({
                 map.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), zoomLevel)
                 )
-            }
+            },this)
         }
         setOnPoiClick(map)
         setMapOnClick(map)
@@ -213,8 +216,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         ) {
             enableMyLocation()
         } else {
-            request.launch(PermissionUtils.PERMISSIONS)
-
+            request.launch(PermissionUtils.FORGRAOUND_PERMISSIONS)
         }
     }
 
@@ -222,18 +224,18 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private fun enableMyLocation() {
         map.isMyLocationEnabled = true
         map.setOnMyLocationButtonClickListener {
-            locationUtils.checkDeviceLocationSettings(
+            PermissionUtils.checkDeviceLocationSettings(
                 this,
                 true,
                 {
-                    locationUtils.lastLocation {
+                    locationUtils.lastLocation ({
                         map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
                                 LatLng(it.latitude, it.longitude),
                                 15f
                             )
                         )
-                    }
+                    },this)
 
                 },
                 {

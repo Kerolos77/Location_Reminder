@@ -17,13 +17,20 @@ class FakeDataSource(
 
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-        if (makeError) {
-            return Result.Error("Error occurred")
+
+        return try{
+            if (makeError)
+            {
+                Result.Error("Error occurred")
+            }
+            else
+            {
+                Result.Success(ArrayList(reminders))
+            }
+        } catch (e: Exception) {
+            Result.Error("Error occurred")
         }
-        reminders?.let {
-            return Result.Success(ArrayList(it))
-        }
-        return Result.Error("Reminders not found")
+
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
@@ -31,15 +38,20 @@ class FakeDataSource(
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
-        if (makeError) {
-            return Result.Error("Error occurred")
+
+        return try{
+            if (makeError)
+            {
+                Result.Error("Error occurred")
+            }
+            else
+            {
+                Result.Success(reminders?.firstOrNull { it.id == id }!!)
+            }
+        } catch (e: Exception) {
+            Result.Error("Error occurred")
         }
-        reminders?.firstOrNull {
-            it.id == id
-        }?.let {
-            return Result.Success(it)
-        }
-        return Result.Error("Reminder not found")
+        
     }
 
     override suspend fun deleteAllReminders() {

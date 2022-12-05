@@ -46,6 +46,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
     }
 
+
     private fun loginResult(): ActivityResultLauncher<Intent> {
         return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             val idpResponse = IdpResponse.fromResultIntent(result.data)

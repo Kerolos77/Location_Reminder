@@ -49,8 +49,8 @@ abstract class BaseFragment : Fragment() {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    fun snackBar(message: String, retryAction: ((View) -> Unit)? = null) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+    fun snackBar(message: String,length:Int=Snackbar.LENGTH_LONG, retryAction: ((View) -> Unit)? = null) {
+        Snackbar.make(requireView(), message, length)
             .setAction(R.string.retry, retryAction)
             .show()
     }

@@ -10,6 +10,9 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withText
+
 import androidx.test.filters.LargeTest
 import androidx.test.runner.AndroidJUnit4
 import com.udacity.project4.locationreminders.RemindersActivity
@@ -20,6 +23,7 @@ import com.udacity.project4.locationreminders.data.local.RemindersLocalRepositor
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
+import com.udacity.project4.util.ToastTest
 import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -132,6 +136,49 @@ class RemindersActivityTest :
     }
 
     @Test
+    fun snapBarTest() {
+        // GIVEN
+        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
+        binding.monitorActivity(scenario)
+        // WHEN
+        onView(withId(R.id.addReminderFAB)).perform(click())
+        onView(withId(R.id.saveReminder)).perform(click())
+        // THEN
+        onView(withText(R.string.err_enter_title))
+            .check(
+                matches(
+                    isDisplayed()
+                )
+            )
+        scenario.close()
+    }
+//    @Test
+//    fun toastTest() {
+//        // GIVEN
+//        val scenario = ActivityScenario.launch(RemindersActivity::class.java)
+//
+//        binding.monitorActivity(scenario)
+//        // WHEN
+//        onView(withId(R.id.addReminderFAB)).perform(click())
+//        onView(withId(R.id.selectLocation)).perform(click())
+//        onView(withId(R.id.map)).perform(click())
+//        onView(withId(R.id.save_button)).perform(click())
+//        onView(withId(R.id.reminderTitle)).perform(typeText("title"))
+//        onView(withId(R.id.reminderDescription)).perform(typeText("description"))
+//        closeSoftKeyboard()
+//        onView(withId(R.id.saveReminder)).perform(click())
+//        // THEN
+//        onView(withText(R.string.reminder_saved))
+//            .inRoot(ToastTest())
+//            .check(
+//                matches(
+//                    isDisplayed()
+//                )
+//            )
+//        scenario.close()
+//    }
+
+    @Test
     fun addReminder() {
         // GIVEN
         val reminder = ReminderDTO("title", "description", "location", 0.0, 0.0)
@@ -145,11 +192,17 @@ class RemindersActivityTest :
         onView(withId(R.id.save_button)).perform(click())
         onView(withId(R.id.reminderTitle)).perform(typeText(reminder.title))
         onView(withId(R.id.reminderDescription)).perform(typeText(reminder.description))
-
-
         closeSoftKeyboard()
         onView(withId(R.id.saveReminder)).perform(click())
         // THEN
+        // TODO Teat Toast
+        onView(withText(R.string.reminder_saved))
+            .inRoot(ToastTest())
+            .check(
+                matches(
+                    isDisplayed()
+                )
+            )
         Thread.sleep(1000)
         onView(withId(R.id.noDataTextView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
         onView(withText(reminder.title))

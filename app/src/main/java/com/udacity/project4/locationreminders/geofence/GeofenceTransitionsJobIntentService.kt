@@ -63,31 +63,33 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     //TODO: get the request id of the current geofence
     private fun sendNotification(triggeringGeofences: List<Geofence>) {
         var requestId = ""
-        if (triggeringGeofences.isNotEmpty()) {
-            requestId = triggeringGeofences[0].requestId
-        } else {
+        if (triggeringGeofences.isEmpty()) {
             Log.e(TAG, " No geofence trigger found.")
             return
-        }
 
-//        Interaction to the repository has to be through a coroutine scope
+        }
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //get the reminder with the request id
-            val result = remindersLocalRepository.getReminder(requestId)
-            if (result is Result.Success<ReminderDTO>) {
-                val reminderDTO = result.data
-                //send a notification to the user with the reminder details
-                sendNotification(
-                    this@GeofenceTransitionsJobIntentService, ReminderDataItem(
-                        reminderDTO.title,
-                        reminderDTO.description,
-                        reminderDTO.location,
-                        reminderDTO.latitude,
-                        reminderDTO.longitude,
-                        reminderDTO.id
+            for (geofence in triggeringGeofences) {
+                requestId = geofence.requestId
+                val result = remindersLocalRepository.getReminder(requestId)
+                if (result is Result.Success<ReminderDTO>) {
+                    val reminderDTO = result.data
+                    //send a notification to the user with the reminder details
+                    sendNotification(
+                        this@GeofenceTransitionsJobIntentService, ReminderDataItem(
+                            reminderDTO.title,
+                            reminderDTO.description,
+                            reminderDTO.location,
+                            reminderDTO.latitude,
+                            reminderDTO.longitude,
+                            reminderDTO.id
+                        )
                     )
-                )
+                }
+
             }
+
         }
     }
 
