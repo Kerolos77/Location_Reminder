@@ -58,7 +58,6 @@ class RemindersLocalRepository(
             return@withContext Result.Error(e.localizedMessage)
         }
     }
-
     /**
      * Deletes all the reminders in the db
      */

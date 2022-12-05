@@ -232,7 +232,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
                                 LatLng(it.latitude, it.longitude),
-                                15f
+                                14f
                             )
                         )
                     },this)
